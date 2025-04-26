@@ -1,13 +1,16 @@
-FROM jupyter/r-notebook:ubuntu-22.04
+FROM rocker/rstudio:latest
 
-USER root
+#rocker/rstudio's workdir is /home/rstudio
 
-RUN apt-get update && \
-    apt-get install -y gdebi-core && \
-    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2023.09.1-494-amd64.deb && \
-    gdebi -n rstudio-server-2023.09.1-494-amd64.deb && \
-    rm rstudio-server-2023.09.1-494-amd64.deb
+# expose port 8787 for RStudio
+EXPOSE 8787
 
-USER ${NB_UID}
+# set environment variables for RStudio, will require sudo otherwise
+ENV USER rstudio
 
-RUN pip install --no-cache-dir jupyter-rsession-proxy==2.1.0
+# install git
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install -y git
+
+# run bash
+CMD ["/bin/bash"]
