@@ -1,0 +1,76 @@
+---
+title: "Mapping in Code"
+format: live-html
+code-fold: true
+editor: visual
+engine: knitr
+execute: 
+  cache: true
+embed-resources: true
+opts_chunk:
+    message: false
+webr:
+  packages:
+    - dplyr
+    - sf
+    - mapview
+    - leaflet
+    - needs
+---
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+---
+
+### Introduction
+
+Spatial analysis is one of the most exciting forms of data journalism. It's pretty cool to calculate statistics from a gigantic data table, and even cooler to join two data tables together and generate new insights.
+
+But turning data into maps is even cooler. Historically, data journalists have needed to do this type of work using separate GIS software, such as ArcView or QGIS, a program that is being taught at this conference.
+
+Those are great tools, but increasingly, data journalists have been doing more and more spatial work directly in their analytical code. The advantage of this is that the spatial part of the analysis gets incorporated into the project seemlessly. The code is fully reproducible and reusable, and the final maps can easily be pushed to the Web.
+
+In this lesson, we are going to use the R statistical programming language as our platform, but I promise you that everything you see here works very similarly in other languages, such as Python.
+
+So let's get started!
+
+We first are going to need to install a few libraries to handle our map work.
+
+-   The "[Simple Features](https://r-spatial.github.io/sf/){target="_blank"}" library has versions in many languages and is the primary tool for opening and processing maps.
+
+-   The "[Mapview](https://r-spatial.github.io/mapview/){target="_blank"}" library provides a good interface for viewing maps as we're working with them.
+
+-   The "[Leaflet](https://rstudio.github.io/leaflet/){target="_blank"}" library is an interface for building interactive maps that can be ported to the Web.
+
+For this exercise, let's work with a very vital European dataset, but one that we call can understand: The Pubs of London. First we need a basemap, and we'll grab the London wards from an [open GIS site](https://opendata.london.ca/datasets/e22482d6693f4dcda4d423fbd7e6e77f_8/about){target="_blank"}.
+
+```{r}
+
+#| message: false
+#| warning: false
+
+#install.packages("tidyverse", quiet = TRUE)
+#install.packages("sf", quiet=T)
+#install.packages("mapview", quiet=T)
+
+needs(tidyverse,sf,mapview)
+
+london_wards <- st_read("https://maps.london.ca/arcgisa/rest/services/OpenData/OpenData_Elections/MapServer/8/query?outFields=*&where=1%3D1&f=geojson")
+
+
+mapview(london_wards)
+```
+
+```{webr}
+#| message: false
+#| warning: false
+
+#install.packages("tidyverse", quiet = TRUE)
+#install.packages("sf", quiet=T)
+#install.packages("mapview", quiet=T)
+
+needs(tidyverse,sf,mapview)
+
+london_wards <- st_read("https://maps.london.ca/arcgisa/rest/services/OpenData/OpenData_Elections/MapServer/8/query?outFields=*&where=1%3D1&f=geojson")
+
+
+mapview(london_wards)
+```
