@@ -1,24 +1,15 @@
 ---
 title: "Mapping in Code"
-format: live-html
-code-fold: true
+format: html
 editor: visual
-engine: knitr
 execute: 
   cache: true
+  warning: false
+  message: false
 embed-resources: true
-opts_chunk:
-    message: false
-webr:
-  packages:
-    - dplyr
-    - sf
-    - mapview
-    - leaflet
-    - needs
 ---
-{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
----
+
+## 
 
 ### Introduction
 
@@ -40,37 +31,30 @@ We first are going to need to install a few libraries to handle our map work.
 
 -   The "[Leaflet](https://rstudio.github.io/leaflet/){target="_blank"}" library is an interface for building interactive maps that can be ported to the Web.
 
-For this exercise, let's work with a very vital European dataset, but one that we call can understand: The Pubs of London. First we need a basemap, and we'll grab the London wards from an [open GIS site](https://opendata.london.ca/datasets/e22482d6693f4dcda4d423fbd7e6e77f_8/about){target="_blank"}.
+To start with, lets just make a simple map. I am grabbing a map of London, UK wards from the internet. Ideally, I'd be getting this from an official source but for the purposes of this exercise, the map looks accurate and usable.
 
 ```{r}
 
-#| message: false
-#| warning: false
 
 #install.packages("tidyverse", quiet = TRUE)
 #install.packages("sf", quiet=T)
 #install.packages("mapview", quiet=T)
+#install.packages("leaflet", quiet=T)
 
-needs(tidyverse,sf,mapview)
+library(sf)
+library(mapview)
 
-london_wards <- st_read("https://maps.london.ca/arcgisa/rest/services/OpenData/OpenData_Elections/MapServer/8/query?outFields=*&where=1%3D1&f=geojson")
+
+london_wards<-read_sf("https://raw.githubusercontent.com/CablesCodeTfL/LondonWards/refs/heads/main/london_wards_geo.json")
+mapview(london_wards,
+        label = "WD23NM",
+        zcol = "LAD23NM",
+        legend=FALSE)
 
 
-mapview(london_wards)
 ```
 
-```{webr}
-#| message: false
-#| warning: false
+What have we done here? We've loaded the sf library to read the GeoJSON from the Web, and we've called on mapview to display the results. We've told mapview how to label the wards, and how to shade the map. I've also suppressed the legend because there are too many districts to display. Full documentation of the controls is [here](https://r-spatial.github.io/mapview/reference/mapView.html){target="_blank"}.
 
-#install.packages("tidyverse", quiet = TRUE)
-#install.packages("sf", quiet=T)
-#install.packages("mapview", quiet=T)
-
-needs(tidyverse,sf,mapview)
-
-london_wards <- st_read("https://maps.london.ca/arcgisa/rest/services/OpenData/OpenData_Elections/MapServer/8/query?outFields=*&where=1%3D1&f=geojson")
-
-
-mapview(london_wards)
+```{}
 ```
